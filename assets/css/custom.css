@@ -1,0 +1,205 @@
+
+/*----------------header-----------------*/
+
+header {
+    background-image: url('/assets/images/raw/bloemenveld2-mio-ito-tYNLwRxFsQc-unsplash.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+header h1 {
+    font-family: 'Pacifico', cursive, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 130px;
+    font-size: 800%;
+}
+
+/*make font smaller for small screens*/
+@media screen and (max-width: 400px) {
+    header h1 {
+        font-size: 30vw;
+    }
+}
+
+header a {
+    text-decoration: none;
+    color: black;
+}
+
+header a:active {
+    color: black;
+}
+
+header a:hover {
+    color: black;
+}
+
+header a:visited {
+    color: black;
+}
+
+.headerlogo {
+    vertical-align: super;
+    width: 50px;
+}
+
+@media screen and (max-width: 250px) {
+    .headerlogo {
+        display: none;
+    }
+}
+
+/*----------------navbar-----------------*/
+
+.navbar {
+    background-color: rgba(245, 245, 245, 0.70);
+    padding: 0;
+}
+
+.navbar-nav>li {
+    padding-right: 20px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: black;
+}
+
+.navbar-light .navbar-nav .nav-link:active {
+    color: black;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: black;
+}
+
+.navbar-light .navbar-nav .nav-link:visited {
+    color: black;
+}
+
+/*----------------miscellaneous-----------------*/
+
+.logo {
+    width: 50px;
+}
+
+.flip-h {
+    transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+
+}
+
+.no-focus-outline:focus {
+    box-shadow: none;
+}
+
+/*----------------cards-----------------*/
+
+.card {
+    border: none;
+}
+
+.card-img-bottom {
+    border-radius: 0.8%;
+}
+
+.invisible {
+    opacity: 0;
+}
+
+.overlay-moreinfo {
+    position: absolute;
+    bottom: 0;
+    background: rgba(245, 245, 245, 0.8);
+    width: 100%;
+    color: black;
+    padding: 5px;
+    text-align: center;
+}
+
+.addtocart-btn {
+    position: absolute;
+    right: 0px;
+    background-color: rgba(245, 245, 245, 0.70);
+    font-size: 40px;
+    padding: 0px 8px 0px 8px;
+}
+
+.addtocart-btn:active {
+    background-color: rgba(187, 187, 187, 0.7);
+    border: grey;
+}
+
+.dont-show {
+    opacity: 0;
+}
+
+@media (hover:hover) {
+    .overlay-moreinfo {
+        display: none;
+    }
+
+    .addtocart-btn {
+        display: none;
+    }
+
+    .card:hover .overlay-moreinfo {
+        display: block;
+    }
+
+    .card:hover .addtocart-btn {
+        display: block;
+    }
+
+}
+
+@media (hover: none) {
+    .overlay-moreinfo .card-text {
+        display: none;
+    }
+}
+
+
+/*----------------shoppingcart-----------------*/
+
+.offcanvas {
+    max-height: 100%;
+}
+
+
+#cartbtn {
+    position: fixed;
+    top: 15px;
+    right: 0px;
+    margin-right: 0px;
+    padding: 0px 20px 0px 10px;
+    background-color: rgba(141, 187, 132, 0.7);
+    color: black;
+    font-size: 60px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    z-index: 9;
+}
+
+#shoppingcart {
+    position: relative;
+}
+
+.offcanvas {
+    bottom: auto;
+}
+
+.offcanvas-end {
+    width: 500px;
+}
+
+.cart-prod-img {
+
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+
+}
+
