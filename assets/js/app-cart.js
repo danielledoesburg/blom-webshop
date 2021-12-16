@@ -4,7 +4,7 @@ Vue.component('app-cart', {
             <button class="btn border-3 btn-outline-light flip-h" id="cartbtn" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-cart"></i></button>
 
-            <div class="offcanvas offcanvas-end h-auto" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
+            <div class="offcanvas show offcanvas-end h-auto" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
                 aria-labelledby="offcanvasRightLabel">
                 <div class="offcanvas-header">
                     <h5 id="offcanvasRightLabel">Wingelwagen</h5>
@@ -22,16 +22,20 @@ Vue.component('app-cart', {
                                         <a class=" text-break" href="#">
                                             <img class="img-fluid cart-prod-img" alt="" :src="product.info.path"></a>
                                     </div>
-                                    <div class="col">
-                                        <a class=" text-break text-reset text-decoration-none" href="#">{{product.info.title}}</a></div>
-                                    <div class="col-2">
-                                        <p>{{product.amount}} x</p>
+                                    <div class="col-4 pt-1">
+                                        <a class="row text-break text-reset text-decoration-none" href="#">{{product.info.title}}</a>
+                                        <p class="row text-secondary cart-prod-price pt-1 mb-0">{{product.info.priceM}}</p>
                                     </div>
-                                    <div class="col-2">
-                                        <p class="text-break" id="cart-price">{{product.totalM}}</p>
+                                    <div class="col-3 px-0">
+                                        <p><button @click="decreaseCartQty(product.id)" class="cart-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
+                                        <span class="p-1">{{product.amount}}</span>
+                                        <button @click="increaseCartQty(product.id)"class="cart-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button></p>
+                                    </div>
+                                    <div class="col-2 pt-1">
+                                        <p class="text-break">{{product.totalM}}</p>
                                     </div>
                                     <div class="col-1 ps-0">
-                                        <button @click="removeFromCart(product.id)" class="btn pt-0 no-focus-outline" type="button" title="verwijderen" aria-label="remove"><i
+                                        <button @click="removeFromCart(product.id)" class="cart-btn" type="button" title="verwijderen" aria-label="remove"><i
                                                 class="bi bi-trash"></i></button>
                                     </div>
                                 </div>
@@ -131,6 +135,7 @@ Vue.component('app-cart', {
 
                 this.cart.products.forEach(prod => {
                     prod.info = getProductInfo(prod.id)
+                    prod.info.priceM = toMoney(prod.info.price)
                     prod.total = prod.amount * prod.info.price
                     prod.totalM = toMoney(prod.total)
                     productCnt += prod.amount
@@ -143,8 +148,8 @@ Vue.component('app-cart', {
                 this.cart.shippingCosts = this.cart.hasShippingCosts ? shippingCosts : 0
                 this.cart.total = (this.cart.subTotal + this.cart.shippingCosts)
                 this.cart.subTotalM = toMoney(this.cart.subTotal),
-                this.cart.shippingCostsM = toMoney(this.cart.shippingCosts),
-                this.cart.totalM = toMoney(this.cart.total)
+                    this.cart.shippingCostsM = toMoney(this.cart.shippingCosts),
+                    this.cart.totalM = toMoney(this.cart.total)
             }
         },
 
@@ -160,20 +165,36 @@ Vue.component('app-cart', {
                 this.cart.products = [this.createCartProdObj(productId, amount)]
 
             } else { //Cart not empty)
-                let prodIndex = getIndexById(this.cart.products, productId)
-                if (prodIndex === -1) { //Product not yet in cart
+                let i = getIndexById(this.cart.products, productId)
+                if (i === -1) { //Product not yet in cart
                     let newProdObj = this.createCartProdObj(productId, amount)
                     this.cart.products.push(newProdObj)
                 } else { //product already in cart
-                    this.cart.products[prodIndex].amount += amount
+                    this.cart.products[i].amount += amount
                 }
             }
             this.saveCart()
         },
 
-        removeFromCart: function(productId) {
-            let prodIndex = getIndexById(this.cart.products, productId)
-            this.cart.products.splice(prodIndex,1)
+        removeFromCart: function (productId) {
+            let i = getIndexById(this.cart.products, productId)
+            this.cart.products.splice(i, 1)
+            this.saveCart()
+        },
+
+        decreaseCartQty: function (productId) {
+            let i = getIndexById(this.cart.products, productId)
+            if (this.cart.products[i].amount > 1) {
+                this.cart.products[i].amount -= 1
+                this.saveCart()
+            } else {
+                this.removeFromCart(productId)
+            }
+        },
+
+        increaseCartQty: function (productId) {
+            let i = getIndexById(this.cart.products, productId)
+            this.cart.products[i].amount += 1
             this.saveCart()
         }
     }
