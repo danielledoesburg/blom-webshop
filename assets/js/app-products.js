@@ -8,7 +8,7 @@ Vue.component('app-products', {
 
     template: `
     <div>
-        <div v-if="products" class="mx-2" v-masonry transition-duration="0.2s" item-selector=".masonry-items">
+        <div v-if="products.length" class="mx-2" v-masonry transition-duration="0.2s" item-selector=".masonry-items">
             <div class="row mx-2 my-3">
 
                 <div v-for="product in products" v-masonry-tile :productid="product.productId" :key="product.id"
@@ -43,30 +43,23 @@ Vue.component('app-products', {
     },
 
     mounted() {
-        this.$root.$on('new-filter', (category) => {
+        bus.$on('new-filter', (category) => {
             this.productFilter = category
         })
     },
 
     methods: {
         addToCart: function (id) {
-            this.$root.$emit('add_to_cart', id)
+            bus.$emit('add_to_cart', id)
         }
     },
 
     computed: {
 
-        // filter() {
-        //     return localStorage.getItem('filter')
-        // },
-
         products() {
-            let products = getProducts()
+            let products = getAllProducts()
             if (this.productFilter !== null) {
                 products = products.filter(prod => prod.category == this.productFilter)
-            }
-            if (products.length === 0) {
-                products = null
             }
             return products
         }

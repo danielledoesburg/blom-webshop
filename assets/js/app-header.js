@@ -60,7 +60,7 @@ Vue.component('app-header', {
     methods: {
         setFilter(category) {
             localStorage.setItem('filter', category)
-            this.$root.$emit('new-filter', category)
+            bus.$emit('new-filter', category)
         }
     },
     computed: {

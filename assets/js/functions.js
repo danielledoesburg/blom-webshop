@@ -6,7 +6,7 @@ function getCategories() {
     return categories
 }
 
-function getProducts() {
+function getAllProducts() {
     return productList
 }
 

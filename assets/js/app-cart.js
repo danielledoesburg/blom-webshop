@@ -1,10 +1,12 @@
 Vue.component('app-cart', {
     template: `
         <div>
-            <button class="btn border-3 btn-outline-light flip-h" id="cartbtn" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-cart"></i></button>
+            <button class="btn border-3 btn-outline-light flip-h" id="cart-btn" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-cart"></i>
+            </button>
 
-            <div class="offcanvas show offcanvas-end h-auto" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
+            <div class="offcanvas offcanvas-end h-auto" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
                 aria-labelledby="offcanvasRightLabel">
                 <div class="offcanvas-header">
                     <h5 id="offcanvasRightLabel">Wingelwagen</h5>
@@ -15,7 +17,7 @@ Vue.component('app-cart', {
 
 
                     <div class="row">
-                        <div v-if="cart.productCnt" class="cart">
+                        <div v-if="cart.products.length" class="cart">
                             <div v-for="product in cart.products">
                                 <div class="row border-top border-bottom py-1 me-auto hidden">
                                     <div class="col-2">
@@ -27,22 +29,22 @@ Vue.component('app-cart', {
                                         <p class="row text-secondary cart-prod-price pt-1 mb-0">{{product.info.priceM}}</p>
                                     </div>
                                     <div class="col-3 px-0">
-                                        <p><button @click="decreaseCartQty(product.id)" class="cart-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
+                                        <p><button @click="decreaseCartQty(product.id)" class="qty-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
                                         <span class="p-1">{{product.amount}}</span>
-                                        <button @click="increaseCartQty(product.id)"class="cart-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button></p>
+                                        <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button></p>
                                     </div>
                                     <div class="col-2 pt-1">
                                         <p class="text-break">{{product.totalM}}</p>
                                     </div>
                                     <div class="col-1 ps-0">
-                                        <button @click="removeFromCart(product.id)" class="cart-btn" type="button" title="verwijderen" aria-label="remove"><i
+                                        <button @click="removeFromCart(product.id)" class="qty-btn" type="button" title="verwijderen" aria-label="remove"><i
                                                 class="bi bi-trash"></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div v-else>
-                            <p class="fs-6 text-secondary text-center">Nog niets in je winkelwagen</p>
+                            <p class="fs-6 text-secondary text-center">Niets in je winkelwagen..</p>
                         </div>
                     </div>
                     <div class="row mt-5 me-auto">
@@ -62,7 +64,7 @@ Vue.component('app-cart', {
                         <!-- <div class="col-1 ps-0 border"></div> -->
                     </div>
                     <div class="row mt-2 m-auto">
-                        <button class="btn btn-outline-dark no-focus-outline">naar winkelwagen</button>
+                        <button class="btn btn-outline-dark no-focus-outline">Winkelwagen overzicht</button>
                     </div>
                 </div>
             </div>
@@ -93,25 +95,18 @@ Vue.component('app-cart', {
 
     computed: {
         productList() {
-            return getProducts()
+            return getAllProducts()
         },
     },
 
     mounted() {
         this.getStoredCart()
-
         this.calculateCart()
 
-        this.$root.$on('add_to_cart', (id) => {
+        bus.$on('add_to_cart', (id) => {
             this.addToCart(id, 1)
         })
     },
-
-    // watch: {
-    //     cart(newCart) {
-    //       localStorage.cart = newCart;
-    //     }
-    // },
 
     methods: {
         createCartProdObj: function (productId, amount) {
@@ -184,11 +179,22 @@ Vue.component('app-cart', {
 
         decreaseCartQty: function (productId) {
             let i = getIndexById(this.cart.products, productId)
-            if (this.cart.products[i].amount > 1) {
+
+            if (this.cart.products[i].amount > 0) {
+
                 this.cart.products[i].amount -= 1
                 this.saveCart()
-            } else {
-                this.removeFromCart(productId)
+
+                if (this.cart.products[i].amount == 0) {
+
+                    setTimeout(function () {
+                        let newI = getIndexById(this.cart.products, productId)
+                        if (this.cart.products[newI].amount == 0) {
+                            this.removeFromCart(productId)
+                        }
+                    }.bind(this), 2000)
+                }
+
             }
         },
 
