@@ -3,7 +3,7 @@ let bus = new Vue()
 let app = new Vue({
     el: '#app',
     data: {
-        company: 'Blom',
+        company: companyName,
         logoImg: 'assets/images/bee.svg',
     }
 })

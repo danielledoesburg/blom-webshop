@@ -123,13 +123,22 @@ header a:visited {
     position: absolute;
     right: 0px;
     background-color: rgba(245, 245, 245, 0.70);
-    font-size: 40px;
+    font-size: 30px;
     padding: 0px 8px 0px 8px;
 }
 
 .addtocart-btn:active {
     background-color: rgba(187, 187, 187, 0.7);
     border: grey;
+}
+
+.plus-minus {
+    position: absolute;
+    right: 0px;
+    background-color: rgba(245, 245, 245, 0.70);
+    padding: 0.4rem;
+    color: black;
+    border-radius: 0.25rem;
 }
 
 .dont-show {
@@ -144,12 +153,21 @@ header a:visited {
     .addtocart-btn {
         display: none;
     }
+    
+    .plus-minus {
+        display: none;
+    }
 
     .card:hover .overlay-moreinfo {
         display: block;
     }
 
     .card:hover .addtocart-btn {
+        display: block;
+    }
+
+
+    .card:hover .plus-minus {
         display: block;
     }
 
@@ -212,7 +230,7 @@ header a:visited {
     height: 30px;
     width: 30px;
     border-radius: 100%;
-    border: none;
+    border: 1px solid rgb(200, 200, 200);
 }
 
 .qty-btn:active {

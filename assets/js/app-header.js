@@ -54,8 +54,7 @@ Vue.component('app-header', {
     </div>    
     `,
     data() {
-        return {
-        }
+        return {}
     },
     methods: {
         setFilter(category) {

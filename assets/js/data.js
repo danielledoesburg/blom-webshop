@@ -1,69 +1,61 @@
-const categories = [
-    { 
-        id: 1,
-        title: 'Bloemen en Planten',
-        slug: 'bloemen-en-planten',
-        children:[ 
-            {
-                id: 4,
-                title: 'Bloemen',
-                slug: 'bloemen'
-            }, {
-                id: 5,
-                title: 'Planten',
-                slug: 'planten'
-            }, {
-                id: 6,
-                title: 'Zaden',
-                slug: 'zaden'
-            }, {
-                id: 7,
-                title: 'Bollen',
-                slug: 'bollen'
-            }, {
-                id: 8,
-                title: 'Droogbloemen',
-                slug: 'droogbloemen'
-            }
-        ]
-    },{ 
-        id: 2,
-        title: 'Tuindieren',
-        slug: 'tuindieren',
-        children: [
-            {
-                id: 9,
-                title: 'Insecten',
-                slug: 'insecten'
-            }, {
-                id: 10,
-                title: 'Vogels',
-                slug: 'vogels'
-            }, {
-                id: 11,
-                title: 'Egels',
-                slug: 'egels'
-            }, {
-                id: 12,
-                title: 'Eekhoorns',
-                slug: 'eekhoorns'
-            }
-        ]
-    },{ 
-        id: 3,
-        title: `Cadeaus`,
-        slug: 'cadeaus',
-        children: [
-            {
-                id: 13,
-                title: 'Cadeaupakketten',
-                slug: 'cadeaupakketten'
-            }
-        ]
-    }
-]
+const categories = [{
+    id: 1,
+    title: 'Bloemen en Planten',
+    slug: 'bloemen-en-planten',
+    children: [{
+        id: 4,
+        title: 'Bloemen',
+        slug: 'bloemen'
+    }, {
+        id: 5,
+        title: 'Planten',
+        slug: 'planten'
+    }, {
+        id: 6,
+        title: 'Zaden',
+        slug: 'zaden'
+    }, {
+        id: 7,
+        title: 'Bollen',
+        slug: 'bollen'
+    }, {
+        id: 8,
+        title: 'Droogbloemen',
+        slug: 'droogbloemen'
+    }]
+}, {
+    id: 2,
+    title: 'Tuindieren',
+    slug: 'tuindieren',
+    children: [{
+        id: 9,
+        title: 'Insecten',
+        slug: 'insecten'
+    }, {
+        id: 10,
+        title: 'Vogels',
+        slug: 'vogels'
+    }, {
+        id: 11,
+        title: 'Egels',
+        slug: 'egels'
+    }, {
+        id: 12,
+        title: 'Eekhoorns',
+        slug: 'eekhoorns'
+    }]
+}, {
+    id: 3,
+    title: `Cadeaus`,
+    slug: 'cadeaus',
+    children: [{
+        id: 13,
+        title: 'Cadeaupakketten',
+        slug: 'cadeaupakketten'
+    }]
+}]
 
-const productList = [{
+const productData = [{
     id: 1,
     product: 'komkommerkruid',
     category: 4,
@@ -328,4 +320,3 @@ const productList = [{
     path: '/assets/images/raw/cadeaupakket-kari-shea-bC8klLU9vKA-unsplash.jpg',
     info: 'En hier staat een leuke tekst over het ding zodat je het gelijk wil kopen'
 }]
-
