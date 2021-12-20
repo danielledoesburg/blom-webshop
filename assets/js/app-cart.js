@@ -89,7 +89,8 @@ Vue.component('app-cart', {
                 get totalM() {
                     return toMoney(this.total)
                 },
-            }
+            },
+            cartTimeoutIDs: []
         }
     },
 
@@ -121,6 +122,13 @@ Vue.component('app-cart', {
             return {
                 id: productId,
                 amount: amount
+            }
+        },
+
+        clearCartTimeout: function (productId){
+            if (this.cartTimeoutIDs[productId]) {
+                clearTimeout(this.cartTimeoutIDs[productId])
+                this.cartTimeoutIDs.splice(productId, 1);
             }
         },
 
@@ -192,25 +200,29 @@ Vue.component('app-cart', {
 
                 if (this.cart.products[i].amount == 0) {
                     if (wait) {
-                        setTimeout(function () {
-                            let newI = getIndexById(this.cart.products, productId)
-                            if (this.cart.products[newI].amount == 0) {
+                        
+                        this.cartTimeoutIDs[productId] = setTimeout(function () {
+                            let i = getIndexById(this.cart.products, productId)
+                        
+                            if (this.cart.products[i].amount == 0) {
                                 this.removeFromCart(productId)
+                                this.clearCartTimeout(productId)
                             }
                         }.bind(this), 2000)
                     } else {
                         this.removeFromCart(productId)
                     }
-                    
                 }
-
             }
         },
 
         increaseCartQty: function (productId) {
+            this.clearCartTimeout(productId)
             let i = getIndexById(this.cart.products, productId)
             this.cart.products[i].amount += 1
             this.saveCart()
         }
+
+        
     }
 })
