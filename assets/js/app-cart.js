@@ -1,8 +1,10 @@
 Vue.component('app-cart', {
     template: `
         <div>
-            <button class="btn border-3 btn-outline-light flip-h" id="cartbtn" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-cart"></i></button>
+            <button class="btn border-3 btn-outline-light flip-h" id="cart-btn" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-cart"></i>
+            </button>
 
             <div class="offcanvas offcanvas-end h-auto" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
                 aria-labelledby="offcanvasRightLabel">
@@ -15,30 +17,34 @@ Vue.component('app-cart', {
 
 
                     <div class="row">
-                        <div v-if="cart.productCnt" class="cart">
+                        <div v-if="cart.products.length" class="cart">
                             <div v-for="product in cart.products">
                                 <div class="row border-top border-bottom py-1 me-auto hidden">
                                     <div class="col-2">
                                         <a class=" text-break" href="#">
                                             <img class="img-fluid cart-prod-img" alt="" :src="product.info.path"></a>
                                     </div>
-                                    <div class="col">
-                                        <a class=" text-break text-reset text-decoration-none" href="#">{{product.info.title}}</a></div>
-                                    <div class="col-2">
-                                        <p>{{product.amount}} x</p>
+                                    <div class="col-4 pt-1">
+                                        <a class="row text-break text-reset text-decoration-none" href="#">{{product.info.title}}</a>
+                                        <p class="row text-secondary cart-prod-price pt-1 mb-0">{{product.info.priceM}}</p>
                                     </div>
-                                    <div class="col-2">
-                                        <p class="text-break" id="cart-price">{{product.totalM}}</p>
+                                    <div class="col-3 px-0">
+                                        <p><button @click="decreaseCartQty(product.id)" class="qty-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
+                                        <span class="p-1">{{product.amount}}</span>
+                                        <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button></p>
+                                    </div>
+                                    <div class="col-2 pt-1">
+                                        <p class="text-break">{{product.totalM}}</p>
                                     </div>
                                     <div class="col-1 ps-0">
-                                        <button @click="removeFromCart(product.id)" class="btn pt-0 no-focus-outline" type="button" title="verwijderen" aria-label="remove"><i
+                                        <button @click="removeFromCart(product.id)" class="qty-btn" type="button" title="verwijderen" aria-label="remove"><i
                                                 class="bi bi-trash"></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div v-else>
-                            <p class="fs-6 text-secondary text-center">Nog niets in je winkelwagen</p>
+                            <p class="fs-6 text-secondary text-center">Niets in je winkelwagen..</p>
                         </div>
                     </div>
                     <div class="row mt-5 me-auto">
@@ -58,7 +64,7 @@ Vue.component('app-cart', {
                         <!-- <div class="col-1 ps-0 border"></div> -->
                     </div>
                     <div class="row mt-2 m-auto">
-                        <button class="btn btn-outline-dark no-focus-outline">naar winkelwagen</button>
+                        <button class="btn btn-outline-dark no-focus-outline">Winkelwagen overzicht</button>
                     </div>
                 </div>
             </div>
@@ -71,9 +77,15 @@ Vue.component('app-cart', {
                 products: [],
                 productCnt: 0,
                 subTotal: 0,
-                shippingCosts: 0,
-                total: 0,
-                hasShippingCosts: false,
+                get hasShippingCosts() {
+                    return (this.subTotal < freeShippingThreshold && this.productCnt > 0)
+                },
+                get shippingCosts() {
+                    return (this.hasShippingCosts ? standardShippingCosts : 0)
+                },
+                get total() {
+                    return (this.subTotal + this.shippingCosts)
+                },
                 get subTotalM() {
                     return toMoney(this.subTotal)
                 },
@@ -83,31 +95,32 @@ Vue.component('app-cart', {
                 get totalM() {
                     return toMoney(this.total)
                 },
-            }
+            },
+            cartTimeoutIDs: []
         }
     },
 
     computed: {
-        productList() {
-            return getProducts()
-        },
+        // productList() {
+        //     return getAllProducts()
+        // },
     },
 
     mounted() {
         this.getStoredCart()
 
-        this.calculateCart()
-
-        this.$root.$on('add_to_cart', (id) => {
+        bus.$on('add_to_cart', (id) => {
             this.addToCart(id, 1)
         })
-    },
 
-    // watch: {
-    //     cart(newCart) {
-    //       localStorage.cart = newCart;
-    //     }
-    // },
+        bus.$on('decrease_cart_qty', (id, wait) => {
+            this.decreaseCartQty(id, wait)
+        })
+
+        bus.$on('increase_cart_qty', (id) => {
+            this.increaseCartQty(id)
+        })
+    },
 
     methods: {
         createCartProdObj: function (productId, amount) {
@@ -117,35 +130,40 @@ Vue.component('app-cart', {
             }
         },
 
+        clearCartTimeout: function (productId) {
+            if (this.cartTimeoutIDs[productId]) {
+                clearTimeout(this.cartTimeoutIDs[productId])
+                this.cartTimeoutIDs.splice(productId, 1);
+            }
+        },
+
         getStoredCart: function () {
             let lsCart = localStorage.getItem('cart')
             if (lsCart) {
                 this.cart.products = JSON.parse(lsCart)
             }
+            this.calculateCart()
         },
 
         calculateCart: function () {
-            if (this.cart.products) {
-                let productCnt = 0
-                let subTotal = 0
+            let productCnt = 0
+            let subTotal = 0
 
-                this.cart.products.forEach(prod => {
-                    prod.info = getProductInfo(prod.id)
-                    prod.total = prod.amount * prod.info.price
-                    prod.totalM = toMoney(prod.total)
-                    productCnt += prod.amount
-                    subTotal += prod.total
-                })
+            this.cart.products.forEach(prod => {
 
-                this.cart.productCnt = productCnt
-                this.cart.subTotal = subTotal
-                this.cart.hasShippingCosts = subTotal < freeShippingThreshold && productCnt > 0
-                this.cart.shippingCosts = this.cart.hasShippingCosts ? shippingCosts : 0
-                this.cart.total = (this.cart.subTotal + this.cart.shippingCosts)
-                this.cart.subTotalM = toMoney(this.cart.subTotal),
-                this.cart.shippingCostsM = toMoney(this.cart.shippingCosts),
-                this.cart.totalM = toMoney(this.cart.total)
-            }
+                prod.info = getProductInfo(prod.id)
+                prod.info.priceM = toMoney(prod.info.price)
+                prod.total = prod.amount * prod.info.price
+                prod.totalM = toMoney(prod.total)
+
+                productCnt += prod.amount
+                subTotal += prod.total
+            })
+
+            this.cart.productCnt = productCnt
+            this.cart.subTotal = subTotal
+
+            bus.$emit('new-cart', this.cart.products)
         },
 
         saveCart: function () {
@@ -155,26 +173,50 @@ Vue.component('app-cart', {
 
 
         addToCart: function (productId, amount) {
-
-            if (!this.cart.products) { //Cart emty
-                this.cart.products = [this.createCartProdObj(productId, amount)]
-
-            } else { //Cart not empty)
-                let prodIndex = getIndexById(this.cart.products, productId)
-                if (prodIndex === -1) { //Product not yet in cart
-                    let newProdObj = this.createCartProdObj(productId, amount)
-                    this.cart.products.push(newProdObj)
-                } else { //product already in cart
-                    this.cart.products[prodIndex].amount += amount
-                }
-            }
+            let newProdObj = this.createCartProdObj(productId, amount)
+            this.cart.products.push(newProdObj)
             this.saveCart()
         },
 
-        removeFromCart: function(productId) {
-            let prodIndex = getIndexById(this.cart.products, productId)
-            this.cart.products.splice(prodIndex,1)
+        removeFromCart: function (productId) {
+            let i = getIndexById(this.cart.products, productId)
+            this.cart.products.splice(i, 1)
+            this.saveCart()
+        },
+
+        decreaseCartQty: function (productId, wait = true) {
+            let i = getIndexById(this.cart.products, productId)
+
+            if (this.cart.products[i].amount > 0) {
+
+                this.cart.products[i].amount--
+                this.saveCart()
+
+                if (this.cart.products[i].amount == 0) {
+                    if (wait) {
+
+                        this.cartTimeoutIDs[productId] = setTimeout(function () {
+                            let i = getIndexById(this.cart.products, productId)
+
+                            if (this.cart.products[i].amount == 0) {
+                                this.removeFromCart(productId)
+                                this.clearCartTimeout(productId)
+                            }
+                        }.bind(this), 2000)
+                    } else {
+                        this.removeFromCart(productId)
+                    }
+                }
+            }
+        },
+
+        increaseCartQty: function (productId) {
+            this.clearCartTimeout(productId)
+            let i = getIndexById(this.cart.products, productId)
+            this.cart.products[i].amount++
             this.saveCart()
         }
+
+
     }
 })

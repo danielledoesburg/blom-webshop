@@ -3,16 +3,18 @@ function getIndexById(objAr, id) {
 }
 
 function getCategories() {
-    return categories
+    let categorieList = categories.map(cat => {return {...cat}})
+    return categorieList
 }
 
-function getProducts() {
+function getProductData() {
+    let productList = productData.map(prod => {return {...prod}})
     return productList
 }
 
 function getProductInfo(id) {
-    return productList.find(prod => prod.id == id)
-} 
+    return getProductData().find(prod => prod.id == id)
+}
 
 function capFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
