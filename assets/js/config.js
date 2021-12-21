@@ -1,4 +1,4 @@
 const companyName = 'Blom'
 
-const shippingCosts = 4.95
+const standardShippingCosts = 4.95
 const freeShippingThreshold = 50

@@ -12,15 +12,15 @@ Vue.component('app-header', {
     template: `
     <div class="container-fluid p-0 pt-3 ">
 
-        <a href="index.html">
+        <router-link to="/">
             <h1 class="text-center text-nowrap">{{ company }}<img class="headerlogo flip-h" :src="logoImg" alt="">
             </h1>
-        </a>
+        </router-link>
 
         <nav class="navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
 
-                <a class="navbar-brand" href="index.html"><img class="logo" :src="logoImg" alt=""></a>
+                <router-link to="/" class="navbar-brand"><img class="logo" :src="logoImg" alt=""></router-link>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -35,12 +35,13 @@ Vue.component('app-header', {
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">{{ item.title }}</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li v-for="subitem in item.children"><a @click="setFilter(subitem.id)" class="dropdown-item" href="#.html">{{subitem.title}}</a></li>
+                                <li v-for="subitem in item.children"><router-link :to="{ name: 'subcat', params: { cat: item.slug, subcat: subitem.slug, subcatid: subitem.id }}" 
+                                class="dropdown-item" href="#.html">{{subitem.title}}</router-link></li>
                             </ul>
                         </li>
                         
                         <li v-for="item in navItemsSingle" class="nav-item">
-                            <a @click="setFilter(item.id)" class="nav-link">{{item.title}}</a>
+                            <router-link :to="{ name: 'cat', params: { cat: item.slug, subcatid: item.id }}" class="nav-link">{{item.title}}</router-link>
                         </li>
                 </div>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
@@ -57,10 +58,10 @@ Vue.component('app-header', {
         return {}
     },
     methods: {
-        setFilter(category) {
-            localStorage.setItem('filter', category)
-            bus.$emit('new-filter', category)
-        }
+        // setFilter(category) {
+        //     localStorage.setItem('filter', category)
+        //     bus.$emit('new-filter', category)
+        // }
     },
     computed: {
         navItems() {
@@ -80,7 +81,6 @@ Vue.component('app-header', {
                 navItems.push(item.children[0])
                 navItems.splice(index, 1)
             })
-
             return navItems
         },
     }

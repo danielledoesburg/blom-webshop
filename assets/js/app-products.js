@@ -8,6 +8,7 @@ Vue.component('app-products', {
 
     template: `
         <div>   
+        <!--<span>{{ $route.path }}</span>-->
             <div v-if="products.length" class="mx-2" v-masonry transition-duration="0.2s" item-selector=".masonry-items">
                 <div class="row mx-2 my-3">
 
@@ -16,13 +17,13 @@ Vue.component('app-products', {
 
                         <div class="card">
                             
-                            <button v-if="!product.amount" @click="addToCart(product.id)" class="btn addtocart-btn no-focus-outline" type="button">
+                            <button v-if="!product.cartAmount" @click="addToCart(product.id)" class="btn addtocart-btn no-focus-outline" type="button">
                                 <i class="bi bi-cart-plus"></i>
                             </button>
 
                             <div v-else class="plus-minus">
                                 <button @click="decreaseCartQty(product.id)" class="qty-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
-                                <span class="fs-5 p-1">{{product.amount}}</span>
+                                <span class="fs-5 p-1">{{product.cartAmount}}</span>
                                 <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button>
                             </div>
 
@@ -47,15 +48,14 @@ Vue.component('app-products', {
 
     data() {
         return {
-            productFilter: null,
             cartProducts: []
         }
     },
 
     created() {
-        bus.$on('new-filter', (category) => {
-            this.productFilter = category
-        })
+        // bus.$on('new-filter', (category) => {
+        //     this.productFilter = category
+        // })
         bus.$on('new-cart', (cartProducts) => {
             this.cartProducts = cartProducts
         })
@@ -70,27 +70,40 @@ Vue.component('app-products', {
         },
         increaseCartQty: function (id) {
             bus.$emit('increase_cart_qty', id)
-        }
+        },
+
+        findCatId: function(slug, target, accum=[]){
+            categories.forEach( cat =>{
+              if(cat.children){
+                find(searchData, f.children, accum)
+              }
+              if(f.value.includes(searchData)){
+                accum.push(f);
+              }
+            });
+            return accum;
+          }
     },
 
     computed: {
 
-        products() { 
-
+        products() {
             //get all products 
-            let productList = getProductData()                                                    
+            let productList = getProductData()
+            let subCatId = this.$route.params.subcatid
 
             //set filter if available
-            if (this.productFilter !== null) {
-                productList = productList.filter(prod => prod.category == this.productFilter)
+            if (subCatId) {
+               
+                productList = productList.filter(prod => prod.category == subCatId)
             }
 
             //set cart amounts
             this.cartProducts.forEach(cartProd => {
-                
+
                 let i = getIndexById(productList, cartProd.id)
                 if (i > -1) {
-                    productList[i].amount = cartProd.amount
+                    productList[i].cartAmount = cartProd.amount
                 }
             })
             return productList

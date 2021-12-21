@@ -10,14 +10,12 @@ Vue.component('app-footer', {
         <div class="container py-2 px-5 my-3 justify-content-center">
             <div class="row border-top pt-2">
                 <ul class="nav flex-column col">
-                    <li class="nav-item"><a href="index.html" class="nav-link px-2 text-muted">Home</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link px-2 text-muted">Contact</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQ</a></li>
+                    <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+                    <li v-for="item in col1" class="nav-item"><router-link :to="'/' + item.slug" class="nav-link px-2 text-muted">{{ item.title }}</router-link></li>
+                
                 </ul>
                 <ul class="nav flex-column col">
-                    <li class="nav-item"><a href="about.html" class="nav-link px-2 text-muted">Over ons</a></li>
-                    <li class="nav-item"><a href="organic.html" class="nav-link px-2 text-muted">100% biologisch</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Onze leveranciers</a></li>
+                    <li v-for="item in col2" class="nav-item"><router-link :to="'/' + item.slug" class="nav-link px-2 text-muted">{{ item.title }}</router-link></li>
                 </ul>
                 <div class="flex-column col pt-2">
                     <p class="text-muted">volg ons</p>
@@ -37,7 +35,7 @@ Vue.component('app-footer', {
                 <div class="flex-column col pt-2">
                     <form>
                         <h5>Meld je aan voor onze nieuwsbrief</h5>
-                        <p>Ontvang elke maand de laatste updates en aanbiedingen</p>
+                        <p class="text-muted">Ontvang elke maand de laatste updates en aanbiedingen</p>
                         <div class="input-group border ps-1">
                             <label for="newsletter1" class="visually-hidden">E-mail</label>
                             <input type="email" class="form-control border-0 no-focus-outline" placeholder="E-mail"
@@ -57,11 +55,19 @@ Vue.component('app-footer', {
     </div> 
     `,
     methods: {
-
     },
     computed: {
         currentYear() {
-            return new Date().getFullYear();
-        }
+            return new Date().getFullYear()
+        },
+        middleIndex() {
+            return Math.ceil(infoData.length / 2)
+        },
+        col1() {
+            return infoData.slice(0, this.middleIndex-1); 
+        },
+        col2() {
+            return infoData.slice(-this.middleIndex); 
+        },
     }
 })

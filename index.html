@@ -21,34 +21,50 @@
     <!-- Scripts -->
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="/node_modules/vue/dist/vue.min.js"></script>
+    <!-- <script src="/node_modules/vue-router/dist/vue-router.min.js"></script> -->
+    <script src="/node_modules/vue-router/dist/vue-router.js"></script>
     <script src="/node_modules/vue-masonry/dist/vue-masonry-plugin-umd.js"></script>
 
     <!-- js & vue scripts -->
     <script src="/assets/js/config.js"></script>
     <script src="/assets/js/data.js"></script>
     <script src="/assets/js/functions.js"></script>
-    <script src="/assets/js/app-header.js"></script>
+    <script src="/assets/js/app-headernav.js"></script>
+    <script src="/assets/js/app-breadcrumb.js"></script>
     <script src="/assets/js/app-cart.js"></script>
     <script src="/assets/js/app-products.js"></script>
     <script src="/assets/js/app-footer.js"></script>
+    <script src="/assets/js/app-infopages.js"></script>
 </head>
 
 <body>
-
     <main id="app">
 
         <header>
             <app-header :company="company" :logo-img="logoImg"></app-header>
         </header>
 
+        <!-- <app-breadcrumb></app-breadcrumb> -->
+        <!-- <nav class="container">
+            <div class="row pt-1 pb-0"
+                style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+                aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="flowers.html">Bloemen en Planten</a></li>
+                    <li class="breadcrumb-item"><a href="index.html">Zaden en Bollen</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Komkommerkruid</li>
+                </ol>
+            </div>
+        </nav> -->
+
         <app-cart></app-cart>
-
-        <app-products></app-products>
-
+        
+        <router-view></router-view>
+ 
         <footer>
             <app-footer :company="company"> </app-footer>
         </footer>
-
     </main>
 
 

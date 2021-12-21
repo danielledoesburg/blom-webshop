@@ -77,9 +77,15 @@ Vue.component('app-cart', {
                 products: [],
                 productCnt: 0,
                 subTotal: 0,
-                hasShippingCosts: false,
-                shippingCosts: 0,
-                total: 0,
+                get hasShippingCosts() {
+                    return (this.subTotal < freeShippingThreshold && this.productCnt > 0)
+                },
+                get shippingCosts() {
+                    return (this.hasShippingCosts ? standardShippingCosts : 0)
+                },
+                get total() {
+                    return (this.subTotal + this.shippingCosts)
+                },
                 get subTotalM() {
                     return toMoney(this.subTotal)
                 },
@@ -102,7 +108,6 @@ Vue.component('app-cart', {
 
     mounted() {
         this.getStoredCart()
-        this.calculateCart()
 
         bus.$on('add_to_cart', (id) => {
             this.addToCart(id, 1)
@@ -125,7 +130,7 @@ Vue.component('app-cart', {
             }
         },
 
-        clearCartTimeout: function (productId){
+        clearCartTimeout: function (productId) {
             if (this.cartTimeoutIDs[productId]) {
                 clearTimeout(this.cartTimeoutIDs[productId])
                 this.cartTimeoutIDs.splice(productId, 1);
@@ -137,6 +142,7 @@ Vue.component('app-cart', {
             if (lsCart) {
                 this.cart.products = JSON.parse(lsCart)
             }
+            this.calculateCart()
         },
 
         calculateCart: function () {
@@ -144,20 +150,19 @@ Vue.component('app-cart', {
             let subTotal = 0
 
             this.cart.products.forEach(prod => {
+
                 prod.info = getProductInfo(prod.id)
                 prod.info.priceM = toMoney(prod.info.price)
                 prod.total = prod.amount * prod.info.price
                 prod.totalM = toMoney(prod.total)
+
                 productCnt += prod.amount
                 subTotal += prod.total
             })
 
             this.cart.productCnt = productCnt
             this.cart.subTotal = subTotal
-            this.cart.hasShippingCosts = subTotal < freeShippingThreshold && productCnt > 0
-            this.cart.shippingCosts = this.cart.hasShippingCosts ? shippingCosts : 0
-            this.cart.total = (this.cart.subTotal + this.cart.shippingCosts)
-    
+
             bus.$emit('new-cart', this.cart.products)
         },
 
@@ -168,19 +173,8 @@ Vue.component('app-cart', {
 
 
         addToCart: function (productId, amount) {
-
-            if (!this.cart.products) { //Cart emty
-                this.cart.products = [this.createCartProdObj(productId, amount)]
-
-            } else { //Cart not empty)
-                let i = getIndexById(this.cart.products, productId)
-                if (i === -1) { //Product not yet in cart
-                    let newProdObj = this.createCartProdObj(productId, amount)
-                    this.cart.products.push(newProdObj)
-                } else { //product already in cart
-                    this.cart.products[i].amount += amount
-                }
-            }
+            let newProdObj = this.createCartProdObj(productId, amount)
+            this.cart.products.push(newProdObj)
             this.saveCart()
         },
 
@@ -190,20 +184,20 @@ Vue.component('app-cart', {
             this.saveCart()
         },
 
-        decreaseCartQty: function (productId, wait=true) {
+        decreaseCartQty: function (productId, wait = true) {
             let i = getIndexById(this.cart.products, productId)
 
             if (this.cart.products[i].amount > 0) {
 
-                this.cart.products[i].amount -= 1
+                this.cart.products[i].amount--
                 this.saveCart()
 
                 if (this.cart.products[i].amount == 0) {
                     if (wait) {
-                        
+
                         this.cartTimeoutIDs[productId] = setTimeout(function () {
                             let i = getIndexById(this.cart.products, productId)
-                        
+
                             if (this.cart.products[i].amount == 0) {
                                 this.removeFromCart(productId)
                                 this.clearCartTimeout(productId)
@@ -219,10 +213,10 @@ Vue.component('app-cart', {
         increaseCartQty: function (productId) {
             this.clearCartTimeout(productId)
             let i = getIndexById(this.cart.products, productId)
-            this.cart.products[i].amount += 1
+            this.cart.products[i].amount++
             this.saveCart()
         }
 
-        
+
     }
 })
