@@ -48,11 +48,13 @@ const categories = [{
   id: 3,
   title: `Cadeaus`,
   slug: 'cadeaus',
-  children: [{
-    id: 13,
-    title: 'Cadeaupakketten',
-    slug: 'cadeaupakketten'
-  }]
+  children: [
+    {
+      id: 13,
+      title: 'Cadeaupakketten',
+      slug: 'cadeaupakketten'
+    }
+  ]
 }]
 
 const productData = [{

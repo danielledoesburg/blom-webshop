@@ -1,4 +1,4 @@
-Vue.component('app-breadcrumb', {
+Vue.component('app_breadcrumb', {
     template: `
         <nav v-if="productFilter" class="container">
             <div class="row pt-1 pb-0"
@@ -15,11 +15,6 @@ Vue.component('app-breadcrumb', {
         return {
             productFilter: null,
         }
-    },
-    created() {
-        bus.$on('new-filter', (category) => {
-            this.productFilter = category
-        })
     },
     computed: {
         tree () {

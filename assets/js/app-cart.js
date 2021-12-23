@@ -1,4 +1,4 @@
-Vue.component('app-cart', {
+Vue.component('app_cart', {
     template: `
         <div>
             <button class="btn border-3 btn-outline-light flip-h" id="cart-btn" type="button" data-bs-toggle="offcanvas"
@@ -163,7 +163,7 @@ Vue.component('app-cart', {
             this.cart.productCnt = productCnt
             this.cart.subTotal = subTotal
 
-            bus.$emit('new-cart', this.cart.products)
+            bus.$emit('new_cart', this.cart.products)
         },
 
         saveCart: function () {

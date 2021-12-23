@@ -33,6 +33,7 @@
     <script src="/assets/js/app-breadcrumb.js"></script>
     <script src="/assets/js/app-cart.js"></script>
     <script src="/assets/js/app-products.js"></script>
+    <script src="/assets/js/app-productdetails.js"></script>
     <script src="/assets/js/app-footer.js"></script>
     <script src="/assets/js/app-infopages.js"></script>
 </head>
@@ -41,7 +42,7 @@
     <main id="app">
 
         <header>
-            <app-header :company="company" :logo-img="logoImg"></app-header>
+            <app_header :company="company" :logo-img="logoImg"></app_header>
         </header>
 
         <!-- <app-breadcrumb></app-breadcrumb> -->
@@ -58,12 +59,25 @@
             </div>
         </nav> -->
 
-        <app-cart></app-cart>
+        <app_cart></app_cart>
         
+        <!-- <div class="container productpage">
+            <div class="row">
+                <div class="col">
+                    <img class="img-fluid rounded mx-auto my-5 d-block" src="/assets/images/raw/komkommerkruid-flash-dantz-WWOLincoSrE-unsplash.jpg" alt="komkommer">
+                </div>
+                <div class="col my-5">
+                    <h1>producttitel</h1>
+                    <p>productinfo</p>
+                </div>
+            </div>
+        </div> -->
+
+
         <router-view></router-view>
  
         <footer>
-            <app-footer :company="company"> </app-footer>
+            <app_footer :company="company"> </app_footer>
         </footer>
     </main>
 

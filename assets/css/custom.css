@@ -182,6 +182,23 @@ header a:visited {
     }
 }
 
+/*----------------productpage-----------------*/
+
+.productpage img {
+    max-height: 650px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*----------------shoppingcart-----------------*/
 

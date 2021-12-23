@@ -1,4 +1,4 @@
-Vue.component('app-header', {
+Vue.component('app_header', {
     props: {
         company: {
             type: String,
@@ -35,13 +35,13 @@ Vue.component('app-header', {
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">{{ item.title }}</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li v-for="subitem in item.children"><router-link :to="{ name: 'subcat', params: { cat: item.slug, subcat: subitem.slug, subcatid: subitem.id }}" 
+                                <li v-for="subitem in item.children"><router-link :to="{ name: 'subcat_products', params: { cat: item.slug, subcat: subitem.slug}}" 
                                 class="dropdown-item" href="#.html">{{subitem.title}}</router-link></li>
                             </ul>
                         </li>
                         
                         <li v-for="item in navItemsSingle" class="nav-item">
-                            <router-link :to="{ name: 'cat', params: { cat: item.slug, subcatid: item.id }}" class="nav-link">{{item.title}}</router-link>
+                            <router-link :to="{ name: 'subcat_products', params: { cat: item.slug, subcat: item.subcategorySlug }}" class="nav-link">{{item.subcategoryTitle}}</router-link>
                         </li>
                 </div>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
@@ -57,12 +57,10 @@ Vue.component('app-header', {
     data() {
         return {}
     },
+
     methods: {
-        // setFilter(category) {
-        //     localStorage.setItem('filter', category)
-        //     bus.$emit('new-filter', category)
-        // }
     },
+
     computed: {
         navItems() {
             let navItems = getCategories()
@@ -75,12 +73,13 @@ Vue.component('app-header', {
         navItemsSingle() {
             let navItems = getCategories()
 
-            navItems = navItems.filter(item => item.children.length === 1)
+            navItems = navItems.filter(item => item.children.length == 1)
 
-            navItems.forEach((item, index) => {
-                navItems.push(item.children[0])
-                navItems.splice(index, 1)
-            })
+            navItems.forEach(item => {
+                item.subcategoryTitle = item.children[0].title
+                item.subcategorySlug = item.children[0].slug
+            });
+
             return navItems
         },
     }

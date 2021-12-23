@@ -1,4 +1,4 @@
-Vue.component('app-footer', {
+Vue.component('app_footer', {
     props: {
         company: {
             type: String,
