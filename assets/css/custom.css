@@ -94,9 +94,16 @@ header a:visited {
     box-shadow: none;
 }
 
-.breadcrumb-item a {
+.breadcrumb-item {
     color: rgb(102, 102, 102);
 }
+.breadcrumb-item a{
+    color: rgb(102, 102, 102);
+}
+
+/* ol li.breadcrumb-item:last-child  a{
+    text-decoration: none;
+} */
 
 /*----------------cards-----------------*/
 
@@ -185,7 +192,7 @@ header a:visited {
 /*----------------productpage-----------------*/
 
 .productpage img {
-    max-height: 650px;
+    max-height: 600px;
 }
 
 

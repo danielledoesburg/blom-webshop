@@ -6,7 +6,7 @@ const productdetails = {template: '<app_productdetails></app_productdetails>'}
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', component: home },
+    { path: '/', name: 'home', component: home },
     { path: '/index.html', redirect: '/' },
     { path: '/home', redirect: '/' },
 

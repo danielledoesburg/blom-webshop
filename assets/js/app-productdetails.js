@@ -8,13 +8,19 @@ Vue.component('app_productdetails', {
                 <div class="col my-5">
                     <h1>{{ productInfo.title }}</h1>
                     <p>{{ productInfo.info }}</p>
+                   
                 </div>
             </div>
         </div>
 
     `,
+
+
     computed: {
         productInfo () {
+            // let productInfo = getProductInfo(this.$route.params.productid)
+            // let cartInfo = this.cartProducts.find(prod => prod.id == productInfo.id)
+            // productInfo.amount = cartInfo.amount
             return getProductInfo(this.$route.params.productid)
         },
     }

@@ -101,9 +101,6 @@ Vue.component('app_cart', {
     },
 
     computed: {
-        // productList() {
-        //     return getAllProducts()
-        // },
     },
 
     mounted() {
