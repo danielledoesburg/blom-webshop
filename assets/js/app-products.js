@@ -2,13 +2,12 @@ const VueMasonryPlugin = window["vue-masonry-plugin"].VueMasonryPlugin
 Vue.use(VueMasonryPlugin)
 
 
-Vue.component('app-products', {
+Vue.component('app_products', {
 
     props: {},
 
     template: `
         <div>   
-        <!--<span>{{ $route.path }}</span>-->
             <div v-if="products.length" class="mx-2" v-masonry transition-duration="0.2s" item-selector=".masonry-items">
                 <div class="row mx-2 my-3">
 
@@ -27,14 +26,14 @@ Vue.component('app-products', {
                                 <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button>
                             </div>
 
-                            <a href="productpage.html">
+                            <router-link :to="{ name: 'product_details', params: { cat: product.catSlug, subcat: product.subcatSlug, product: product.product, productid: product.id}}">
                                 <img class="card-img-bottom" :src="product.path" :alt="product.title">
                                 <div class="overlay-moreinfo">
-                                    <h5 class="card-title">{{ product.title }}</h5>
+                                    <h5 class="card-title">{{ product.title}}</h5>
                                     <p class="card-text">{{ product.info }}</p>
                                 </div>
                             
-                            </a>
+                            </router-link>
                         </div>
                     </div>
 
@@ -53,10 +52,7 @@ Vue.component('app-products', {
     },
 
     created() {
-        // bus.$on('new-filter', (category) => {
-        //     this.productFilter = category
-        // })
-        bus.$on('new-cart', (cartProducts) => {
+        bus.$on('new_cart', (cartProducts) => {
             this.cartProducts = cartProducts
         })
     },
@@ -72,33 +68,61 @@ Vue.component('app-products', {
             bus.$emit('increase_cart_qty', id)
         },
 
-        findCatId: function(slug, target, accum=[]){
-            categories.forEach( cat =>{
-              if(cat.children){
-                find(searchData, f.children, accum)
-              }
-              if(f.value.includes(searchData)){
-                accum.push(f);
-              }
-            });
-            return accum;
-          }
+        getSlugsBySubcatId: function (subcatId) {
+            let catObj
+            let subcatObj
+
+            for(let cat of categories) {
+                subcatObj = cat.children.find(subcat => subcat.id == subcatId)
+                if (subcatObj) {
+                    catObj = cat
+                    break
+                }
+            }
+            return {catSlug: catObj.slug, subcatSlug: subcatObj.slug}
+            
+        },
+        
+        getCatIdBySlug: function (slug) {
+            let result
+            categories.some(cat => result = cat.slug === slug ? cat : cat.children.find(subcat => subcat.slug == slug))
+            if (result) {
+                return result.id
+            } else {
+                return 0
+            }
+        },
+
+        
+
+        getSubcatIdsArray: function (catId) {
+            let catObj = categories.find(cat => cat.id == catId)
+            return catObj.children.map(sc => sc.id)
+        },
     },
 
     computed: {
 
         products() {
-            //get all products 
-            let productList = getProductData()
-            let subCatId = this.$route.params.subcatid
 
-            //set filter if available
-            if (subCatId) {
-               
-                productList = productList.filter(prod => prod.category == subCatId)
+            let productList = getProductData()
+            let catId = this.getCatIdBySlug(this.$route.params.cat)
+            let subcatId = this.getCatIdBySlug(this.$route.params.subcat)
+
+            //filter products by (sub)cat
+            if (subcatId) {
+
+                productList = productList.filter(prod => prod.category == subcatId)
+
+            } else if (catId) {
+
+                let collectedSubcatIds = this.getSubcatIdsArray(catId)
+                if (collectedSubcatIds && collectedSubcatIds.length) {
+                    productList = productList.filter(prod => collectedSubcatIds.indexOf(prod.category) !== -1)
+                }
             }
 
-            //set cart amounts
+            //set cart amounts for products
             this.cartProducts.forEach(cartProd => {
 
                 let i = getIndexById(productList, cartProd.id)
@@ -106,6 +130,14 @@ Vue.component('app-products', {
                     productList[i].cartAmount = cartProd.amount
                 }
             })
+
+            //get (sub)cat slugs for routing
+            productList.forEach(prod => {
+                let slugs = this.getSlugsBySubcatId(prod.category)
+                prod.catSlug = slugs.catSlug
+                prod.subcatSlug = slugs.subcatSlug
+            })
+
             return productList
         }
     }

@@ -12,19 +12,15 @@
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/custom.css">
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
-
     <!-- Scripts -->
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="/node_modules/vue/dist/vue.min.js"></script>
-    <!-- <script src="/node_modules/vue-router/dist/vue-router.min.js"></script> -->
     <script src="/node_modules/vue-router/dist/vue-router.js"></script>
     <script src="/node_modules/vue-masonry/dist/vue-masonry-plugin-umd.js"></script>
-
     <!-- js & vue scripts -->
     <script src="/assets/js/config.js"></script>
     <script src="/assets/js/data.js"></script>
@@ -33,6 +29,7 @@
     <script src="/assets/js/app-breadcrumb.js"></script>
     <script src="/assets/js/app-cart.js"></script>
     <script src="/assets/js/app-products.js"></script>
+    <script src="/assets/js/app-productdetails.js"></script>
     <script src="/assets/js/app-footer.js"></script>
     <script src="/assets/js/app-infopages.js"></script>
 </head>
@@ -41,29 +38,31 @@
     <main id="app">
 
         <header>
-            <app-header :company="company" :logo-img="logoImg"></app-header>
+            <app_header :company="company" :logo-img="logoImg"></app_header>
         </header>
 
-        <!-- <app-breadcrumb></app-breadcrumb> -->
-        <!-- <nav class="container">
-            <div class="row pt-1 pb-0"
-                style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-                aria-label="breadcrumb">
-                <ol class="breadcrumb justify-content-center mb-0">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="flowers.html">Bloemen en Planten</a></li>
-                    <li class="breadcrumb-item"><a href="index.html">Zaden en Bollen</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Komkommerkruid</li>
-                </ol>
-            </div>
-        </nav> -->
+        <app_breadcrumb></app_breadcrumb>
 
-        <app-cart></app-cart>
+
+        <app_cart></app_cart>
         
+        <!-- <div class="container productpage">
+            <div class="row">
+                <div class="col">
+                    <img class="img-fluid rounded mx-auto my-5 d-block" src="/assets/images/raw/komkommerkruid-flash-dantz-WWOLincoSrE-unsplash.jpg" alt="komkommer">
+                </div>
+                <div class="col my-5">
+                    <h1>producttitel</h1>
+                    <p>productinfo</p>
+                </div>
+            </div>
+        </div> -->
+
+
         <router-view></router-view>
  
         <footer>
-            <app-footer :company="company"> </app-footer>
+            <app_footer :company="company"> </app_footer>
         </footer>
     </main>
 

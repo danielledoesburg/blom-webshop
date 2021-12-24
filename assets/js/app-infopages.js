@@ -1,4 +1,4 @@
-Vue.component('app-infopages', {
+Vue.component('app_infopages', {
     props: {},
     template: `
         <div>

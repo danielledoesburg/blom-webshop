@@ -1,17 +1,18 @@
-const home = { template: '<app-products></app-products>' }
-const infoPages = { template: '<app-infopages></app-infopages>'}
-const products = {template: '<app-products></app-products>'}
+const home = { template: '<app_products></app_products>' }
+const infoPages = { template: '<app_infopages></app_infopages>'}
+const products = {template: '<app_products></app_products>'}
+const productdetails = {template: '<app_productdetails></app_productdetails>'}
 
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', component: home },
+    { path: '/', name: 'home', component: home },
     { path: '/index.html', redirect: '/' },
     { path: '/home', redirect: '/' },
 
-    { path: '/products/:cat', name: 'cat', component: products, props: true, 
-        children: [{ path: ':subcat', name: 'subcat', component: products, props: true  }]},
-    
+    { path: '/products/:cat/', name: 'cat_products', component: products, props: true,},
+    { path: '/products/:cat/:subcat', name: 'subcat_products', component: products, props: true,},
+    { path: '/products/:cat/:subcat/:product' + '-' + ':productid', name: 'product_details', component: productdetails, props: true },
     { path: '/about', component: infoPages},
     { path: '/over-ons', redirect: '/about' },
     { path: '/overons', redirect: '/about' },
