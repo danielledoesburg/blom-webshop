@@ -16,13 +16,13 @@ Vue.component('app_products', {
 
                         <div class="card">
                             
-                            <button v-if="!product.cartAmount" @click="addToCart(product.id)" class="btn addtocart-btn no-focus-outline" type="button">
+                            <button v-if="!product.cartqty" @click="addToCart(product.id)" class="btn addtocart-btn no-focus-outline" type="button">
                                 <i class="bi bi-cart-plus"></i>
                             </button>
 
                             <div v-else class="plus-minus">
                                 <button @click="decreaseCartQty(product.id)" class="qty-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
-                                <span class="fs-5 p-1">{{product.cartAmount}}</span>
+                                <span class="fs-5 p-1">{{product.cartqty}}</span>
                                 <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button>
                             </div>
 
@@ -122,12 +122,12 @@ Vue.component('app_products', {
                 }
             }
 
-            //set cart amounts for products
+            //set cart qtys for products
             this.cartProducts.forEach(cartProd => {
 
                 let i = getIndexById(productList, cartProd.id)
                 if (i > -1) {
-                    productList[i].cartAmount = cartProd.amount
+                    productList[i].cartqty = cartProd.qty
                 }
             })
 

@@ -14,14 +14,13 @@ Vue.component('app_breadcrumb', {
                         <router-link v-if="product" :to="{name: 'subcat_products', cat: cat.slug, subcat_products: subcat.slug}">{{ subcat.title }}</router-link>
                         <span v-else>{{ subcat.title }}</span>
                     </li>
-                    <li  v-if="product" class="breadcrumb-item">{{ product.title }}</li>
+                    <li v-if="product" class="breadcrumb-item">{{ product.title }}</li>
                 </ol>
             </div>
         </nav>
     `,
     data() {
-        return {
-            
+        return {      
         }
     },
 
@@ -34,10 +33,6 @@ Vue.component('app_breadcrumb', {
     },
 
     computed: {
-        routeName() {
-            return this.getCatBySlug(this.$route.name)
-        },
-
         cat () {
             return this.getCatBySlug(this.$route.params.cat)
         },

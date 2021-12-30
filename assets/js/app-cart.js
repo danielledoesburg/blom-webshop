@@ -1,10 +1,16 @@
 Vue.component('app_cart', {
     template: `
         <div>
-            <button class="btn border-3 btn-outline-light flip-h" id="cart-btn" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                <i class="bi bi-cart"></i>
-            </button>
+           <div> 
+                <button class="cart-btn btn border-3 btn-outline-light flip-h" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                    <i class="bi bi-cart"></i>
+                </button>
+                <div v-show="cart.productCnt" class="cart-cnt" :class="{ focus: cartFocus }"data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                    {{cart.productCnt}}
+                </div>
+            </div>
 
             <div class="offcanvas offcanvas-end h-auto" data-bs-scroll="true" tabindex="-1" id="offcanvasRight"
                 aria-labelledby="offcanvasRightLabel">
@@ -30,7 +36,7 @@ Vue.component('app_cart', {
                                     </div>
                                     <div class="col-3 px-0">
                                         <p><button @click="decreaseCartQty(product.id)" class="qty-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
-                                        <span class="p-1">{{product.amount}}</span>
+                                        <span class="p-1">{{product.qty}}</span>
                                         <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button></p>
                                     </div>
                                     <div class="col-2 pt-1">
@@ -96,18 +102,22 @@ Vue.component('app_cart', {
                     return toMoney(this.total)
                 },
             },
+            cartFocus: false,
             cartTimeoutIDs: []
         }
     },
 
-    computed: {
-    },
+    computed: {},
 
     mounted() {
         this.getStoredCart()
 
         bus.$on('add_to_cart', (id) => {
-            this.addToCart(id, 1)
+            this.addToCart(id)
+        })
+
+        bus.$on('add_qty_to_cart', (id, qty) => {
+            this.addToCart(id, qty)
         })
 
         bus.$on('decrease_cart_qty', (id, wait) => {
@@ -120,10 +130,20 @@ Vue.component('app_cart', {
     },
 
     methods: {
-        createCartProdObj: function (productId, amount) {
+
+        toggleCartFocus: function () {
+            this.cartFocus = true
+
+            setTimeout(
+                function() {
+                this.cartFocus = false
+            }.bind(this), 100)
+        },
+
+        createCartProdObj: function (productId, qty) {
             return {
                 id: productId,
-                amount: amount
+                qty: qty
             }
         },
 
@@ -150,16 +170,17 @@ Vue.component('app_cart', {
 
                 prod.info = getProductInfo(prod.id)
                 prod.info.priceM = toMoney(prod.info.price)
-                prod.total = prod.amount * prod.info.price
+                prod.total = prod.qty * prod.info.price
                 prod.totalM = toMoney(prod.total)
 
-                productCnt += prod.amount
+                productCnt += prod.qty
                 subTotal += prod.total
             })
 
             this.cart.productCnt = productCnt
             this.cart.subTotal = subTotal
-
+            
+            
             bus.$emit('new_cart', this.cart.products)
         },
 
@@ -168,11 +189,16 @@ Vue.component('app_cart', {
             this.calculateCart()
         },
 
+        addToCart: function (productId, qty = 1) {
+            if (getIndexById(this.cart.products, productId) != -1) {
+                this.increaseCartQty(productId, qty)
 
-        addToCart: function (productId, amount) {
-            let newProdObj = this.createCartProdObj(productId, amount)
-            this.cart.products.push(newProdObj)
-            this.saveCart()
+            } else {
+                let newProdObj = this.createCartProdObj(productId, qty)
+                this.cart.products.push(newProdObj)
+                this.saveCart()
+            }
+            this.toggleCartFocus()
         },
 
         removeFromCart: function (productId) {
@@ -184,18 +210,18 @@ Vue.component('app_cart', {
         decreaseCartQty: function (productId, wait = true) {
             let i = getIndexById(this.cart.products, productId)
 
-            if (this.cart.products[i].amount > 0) {
+            if (this.cart.products[i].qty > 0) {
 
-                this.cart.products[i].amount--
+                this.cart.products[i].qty--
                 this.saveCart()
 
-                if (this.cart.products[i].amount == 0) {
+                if (this.cart.products[i].qty == 0) {
                     if (wait) {
 
                         this.cartTimeoutIDs[productId] = setTimeout(function () {
                             let i = getIndexById(this.cart.products, productId)
 
-                            if (this.cart.products[i].amount == 0) {
+                            if (this.cart.products[i].qty == 0) {
                                 this.removeFromCart(productId)
                                 this.clearCartTimeout(productId)
                             }
@@ -205,13 +231,15 @@ Vue.component('app_cart', {
                     }
                 }
             }
+            this.toggleCartFocus()
         },
 
-        increaseCartQty: function (productId) {
+        increaseCartQty: function (productId, qty = 1) {
             this.clearCartTimeout(productId)
             let i = getIndexById(this.cart.products, productId)
-            this.cart.products[i].amount++
+            this.cart.products[i].qty += qty
             this.saveCart()
+            this.toggleCartFocus()
         }
 
 

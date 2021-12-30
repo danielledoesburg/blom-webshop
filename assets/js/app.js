@@ -10,9 +10,10 @@ const router = new VueRouter({
     { path: '/index.html', redirect: '/' },
     { path: '/home', redirect: '/' },
 
-    { path: '/products/:cat/', name: 'cat_products', component: products, props: true,},
-    { path: '/products/:cat/:subcat', name: 'subcat_products', component: products, props: true,},
-    { path: '/products/:cat/:subcat/:product' + '-' + ':productid', name: 'product_details', component: productdetails, props: true },
+    { path: '/producten/:cat/', name: 'cat_products', component: products, props: true,},
+    { path: '/producten/:cat/:subcat', name: 'subcat_products', component: products, props: true,},
+    { path: '/producten/:cat/:subcat/:product' + '-' + ':productid', name: 'product_details', component: productdetails, props: true },
+    
     { path: '/about', component: infoPages},
     { path: '/over-ons', redirect: '/about' },
     { path: '/overons', redirect: '/about' },
