@@ -101,9 +101,11 @@ header a:visited {
     color: rgb(102, 102, 102);
 }
 
-/* ol li.breadcrumb-item:last-child  a{
-    text-decoration: none;
-} */
+.qty-input {
+    border: none; 
+    width: 2.1em;
+    text-align: center;
+}
 
 /*----------------cards-----------------*/
 
@@ -195,13 +197,21 @@ header a:visited {
     max-height: 600px;
 }
 
+.productpage .add-btn {
+    border: none; 
+    background-color: rgba(141, 187, 132, 0.7);
+    margin-top: -5px;
+    padding: 0.5rem, 0.75rem;
+    border-radius: 0.25rem;
+    /* padding-right: 0.75rem;
+    padding-bottom: 0.375rem;
+    padding-left: 0.75rem; */
+}
 
-
-
-
-
-
-
+.productpage .add-btn:active {
+    background-color: rgb(112, 148, 105);
+    border: rgb(71, 94, 67);
+}
 
 
 
@@ -228,6 +238,25 @@ header a:visited {
     border-bottom-right-radius: 50%;
     z-index: 9;
 }
+
+#cart-cnt {
+    position: fixed;
+    top: 45px;
+    right: 24px;
+    height: 30px;
+    width: 41px;
+    font-weight: bold;
+    font-size: 22px;
+    text-shadow: 1px 0 white, 0 1px white, 1px 0 white, 0 1px white;
+    text-align: center;
+    z-index: 99;
+}
+
+#cart-cnt.focus {
+    transform: scale(2,2);
+}
+
+
 
 #shoppingcart {
     position: relative;
