@@ -2,11 +2,11 @@ Vue.component('app_cart', {
     template: `
         <div>
            <div> 
-                <button class="cart-btn btn border-3 btn-outline-light flip-h" type="button" data-bs-toggle="offcanvas"
+                <button class="btn border-3 btn-outline-light flip-h" id="cart-btn" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                     <i class="bi bi-cart"></i>
                 </button>
-                <div v-show="cart.productCnt" class="cart-cnt" :class="{ focus: cartFocus }"data-bs-toggle="offcanvas"
+                <div v-show="cart.productCnt" id="cart-cnt" :class="{ focus: cartFocus }"data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                     {{cart.productCnt}}
                 </div>
@@ -24,7 +24,7 @@ Vue.component('app_cart', {
 
                     <div class="row">
                         <div v-if="cart.products.length" class="cart">
-                            <div v-for="product in cart.products">
+                            <div v-for="product in cart.products" :key="product.id">
                                 <div class="row border-top border-bottom py-1 me-auto hidden">
                                     <div class="col-2">
                                         <a class=" text-break" href="#">
@@ -36,10 +36,10 @@ Vue.component('app_cart', {
                                     </div>
                                     <div class="col-3 px-0">
                                         <p><button @click="decreaseCartQty(product.id)" class="qty-btn" type="button" title="een stuk verwijderen" aria-label="remove piece"> - </button>
-                                        <span class="p-1">{{product.qty}}</span>
+                                        <input v-model="product.qty" @keypress="numbersOnly($event)" @blur="qtyInput(product.id, product.qty)" class="qty-input p-1">
                                         <button @click="increaseCartQty(product.id)"class="qty-btn" type="button" title="een stuk toevoegen" aria-label="add piece"> + </button></p>
                                     </div>
-                                    <div class="col-2 pt-1">
+                                    <div class="col-2 pt-1 px-0">
                                         <p class="text-break">{{product.totalM}}</p>
                                     </div>
                                     <div class="col-1 ps-0">
@@ -131,30 +131,30 @@ Vue.component('app_cart', {
 
     methods: {
 
-        toggleCartFocus: function () {
+        toggleCartFocus: function() {
             this.cartFocus = true
 
             setTimeout(
                 function() {
-                this.cartFocus = false
-            }.bind(this), 100)
+                    this.cartFocus = false
+                }.bind(this), 150)
         },
 
-        createCartProdObj: function (productId, qty) {
+        createCartProdObj: function(productId, qty) {
             return {
                 id: productId,
                 qty: qty
             }
         },
 
-        clearCartTimeout: function (productId) {
+        clearCartTimeout: function(productId) {
             if (this.cartTimeoutIDs[productId]) {
                 clearTimeout(this.cartTimeoutIDs[productId])
                 this.cartTimeoutIDs.splice(productId, 1);
             }
         },
 
-        getStoredCart: function () {
+        getStoredCart: function() {
             let lsCart = localStorage.getItem('cart')
             if (lsCart) {
                 this.cart.products = JSON.parse(lsCart)
@@ -162,7 +162,7 @@ Vue.component('app_cart', {
             this.calculateCart()
         },
 
-        calculateCart: function () {
+        calculateCart: function() {
             let productCnt = 0
             let subTotal = 0
 
@@ -179,17 +179,16 @@ Vue.component('app_cart', {
 
             this.cart.productCnt = productCnt
             this.cart.subTotal = subTotal
-            
-            
+
             bus.$emit('new_cart', this.cart.products)
         },
 
-        saveCart: function () {
+        saveCart: function() {
             localStorage.setItem('cart', JSON.stringify(this.cart.products))
             this.calculateCart()
         },
 
-        addToCart: function (productId, qty = 1) {
+        addToCart: function(productId, qty = 1) {
             if (getIndexById(this.cart.products, productId) != -1) {
                 this.increaseCartQty(productId, qty)
 
@@ -201,13 +200,30 @@ Vue.component('app_cart', {
             this.toggleCartFocus()
         },
 
-        removeFromCart: function (productId) {
+        removeFromCart: function(productId) {
             let i = getIndexById(this.cart.products, productId)
             this.cart.products.splice(i, 1)
             this.saveCart()
         },
 
-        decreaseCartQty: function (productId, wait = true) {
+        removeQtyZero: function(productId, wait = true) {
+            if (wait) {
+
+                this.cartTimeoutIDs[productId] = setTimeout(function() {
+                    let i = getIndexById(this.cart.products, productId)
+
+                    if (this.cart.products[i].qty == 0) {
+                        this.removeFromCart(productId)
+                        this.clearCartTimeout(productId)
+                    }
+                }.bind(this), 2000)
+
+            } else {
+                this.removeFromCart(productId)
+            }
+        },
+
+        decreaseCartQty: function(productId, wait) {
             let i = getIndexById(this.cart.products, productId)
 
             if (this.cart.products[i].qty > 0) {
@@ -216,32 +232,38 @@ Vue.component('app_cart', {
                 this.saveCart()
 
                 if (this.cart.products[i].qty == 0) {
-                    if (wait) {
-
-                        this.cartTimeoutIDs[productId] = setTimeout(function () {
-                            let i = getIndexById(this.cart.products, productId)
-
-                            if (this.cart.products[i].qty == 0) {
-                                this.removeFromCart(productId)
-                                this.clearCartTimeout(productId)
-                            }
-                        }.bind(this), 2000)
-                    } else {
-                        this.removeFromCart(productId)
-                    }
+                    this.removeQtyZero(productId, wait)
                 }
             }
             this.toggleCartFocus()
         },
 
-        increaseCartQty: function (productId, qty = 1) {
+        increaseCartQty: function(productId, qty = 1) {
             this.clearCartTimeout(productId)
             let i = getIndexById(this.cart.products, productId)
             this.cart.products[i].qty += qty
             this.saveCart()
             this.toggleCartFocus()
-        }
+        },
 
+
+        qtyInput: function(productId, qty) {
+
+            if (qty == '') {
+                qty = 0
+            }
+
+            qty = Number.parseInt(qty)
+
+            this.clearCartTimeout(productId)
+            let i = getIndexById(this.cart.products, productId)
+            this.cart.products[i].qty = qty
+            this.saveCart()
+
+            if (qty == 0) {
+                this.removeQtyZero(productId)
+            } 
+        },
 
     }
 })

@@ -103,7 +103,7 @@ header a:visited {
 
 .qty-input {
     border: none; 
-    width: 2.5em;
+    width: 2.1em;
     text-align: center;
 }
 
@@ -225,7 +225,7 @@ header a:visited {
 }
 
 
-.cart-btn {
+#cart-btn {
     position: fixed;
     top: 15px;
     right: 0px;
@@ -239,7 +239,7 @@ header a:visited {
     z-index: 9;
 }
 
-.cart-cnt {
+#cart-cnt {
     position: fixed;
     top: 45px;
     right: 24px;
@@ -252,7 +252,7 @@ header a:visited {
     z-index: 99;
 }
 
-.focus {
+#cart-cnt.focus {
     transform: scale(2,2);
 }
 

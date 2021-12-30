@@ -27,6 +27,22 @@ const router = new VueRouter({
   ]
 })
 
+Vue.mixin({
+  methods: {
+    numbersOnly(event) {
+      event = (event) ? event : window.event;
+      let key = event.key
+      let code = event.code
+
+      if (isNaN(key) || code == 'Space') {
+          event.preventDefault()
+        } else {
+          return true
+        }
+  },
+  }
+})
+
 
 const bus = new Vue()
 

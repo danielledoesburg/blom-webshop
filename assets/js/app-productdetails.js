@@ -3,7 +3,7 @@ Vue.component('app_productdetails', {
         <div class="container productpage">
             <div class="row">
                 <div class="col">
-                    <img class="img-fluid rounded mx-auto my-5 d-block" :src="productInfo.path" :alt="productInfo.title">
+                    <img class="img-fluid float-end rounded mx-auto my-5 d-block" :src="productInfo.path" :alt="productInfo.title">
                 </div>
                 <div class="col my-5">
                     <h1>{{ productInfo.title }}</h1>
@@ -39,18 +39,6 @@ Vue.component('app_productdetails', {
             }
         },
 
-        numbersOnly(event) {
-            event = (event) ? event : window.event;
-            let key = event.key
-            let code = event.code
-
-            if (isNaN(key) || code == 'Space') {
-                event.preventDefault()
-              } else {
-                return true
-              }
-        },
-        
         addToCart: function (id) {
             bus.$emit('add_qty_to_cart', this.productInfo.id, this.qty)
         }

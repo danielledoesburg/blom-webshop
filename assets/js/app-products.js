@@ -30,7 +30,7 @@ Vue.component('app_products', {
                                 <img class="card-img-bottom" :src="product.path" :alt="product.title">
                                 <div class="overlay-moreinfo">
                                     <h5 class="card-title">{{ product.title}}</h5>
-                                    <p class="card-text">{{ product.info }}</p>
+                                    <p class="card-text">{{ product.infoshort }}</p>
                                 </div>
                             
                             </router-link>
