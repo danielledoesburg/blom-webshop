@@ -1,3 +1,9 @@
-# blom-webshop-v2
+# Blom webshop
 
-Coding bootcamp project, with HTML, CSS, JS and Vue.js.
+Coding bootcamp frontend project with HTML, CSS, JS and Vue.js.
+
+### Installing
+
+* npm i
+
+
