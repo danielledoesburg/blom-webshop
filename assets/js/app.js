@@ -43,7 +43,6 @@ Vue.mixin({
   }
 })
 
-
 const bus = new Vue()
 
 const app = new Vue({

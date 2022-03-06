@@ -9,6 +9,7 @@ Vue.component('app_header', {
             required: true
         }
     },
+
     template: `
     <div class="container-fluid p-0 pt-3 ">
 
@@ -54,12 +55,6 @@ Vue.component('app_header', {
         </nav>
     </div>    
     `,
-    data() {
-        return {}
-    },
-
-    methods: {
-    },
 
     computed: {
         navItems() {

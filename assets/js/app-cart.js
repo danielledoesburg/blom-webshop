@@ -107,8 +107,6 @@ Vue.component('app_cart', {
         }
     },
 
-    computed: {},
-
     mounted() {
         this.getStoredCart()
 
@@ -246,7 +244,6 @@ Vue.component('app_cart', {
             this.toggleCartFocus()
         },
 
-
         qtyInput: function(productId, qty) {
 
             if (qty == '') {
@@ -264,6 +261,5 @@ Vue.component('app_cart', {
                 this.removeQtyZero(productId)
             } 
         },
-
     }
 })

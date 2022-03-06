@@ -3,9 +3,6 @@ Vue.use(VueMasonryPlugin)
 
 
 Vue.component('app_products', {
-
-    props: {},
-
     template: `
         <div>   
             <div v-if="products.length" class="mx-2" v-masonry transition-duration="0.2s" item-selector=".masonry-items">
@@ -92,8 +89,6 @@ Vue.component('app_products', {
                 return 0
             }
         },
-
-        
 
         getSubcatIdsArray: function (catId) {
             let catObj = categories.find(cat => cat.id == catId)

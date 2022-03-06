@@ -1,11 +1,10 @@
 /*----------------header-----------------*/
 
 header {
-    background-image: url('/assets/images/raw/bloemenveld2-mio-ito-tYNLwRxFsQc-unsplash.jpg');
+    background-image: url('/assets/images/bloemenveld2-mio-ito-tYNLwRxFsQc-unsplash.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-
 }
 
 header h1 {
@@ -14,7 +13,6 @@ header h1 {
     font-size: 800%;
 }
 
-/*make font smaller for small screens*/
 @media screen and (max-width: 400px) {
     header h1 {
         font-size: 30vw;
@@ -49,6 +47,7 @@ header a:visited {
     }
 }
 
+
 /*----------------navbar-----------------*/
 
 .navbar {
@@ -76,6 +75,7 @@ header a:visited {
     color: black;
 }
 
+
 /*----------------miscellaneous-----------------*/
 
 .logo {
@@ -87,7 +87,6 @@ header a:visited {
     -moz-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     -ms-transform: scaleX(-1);
-
 }
 
 .no-focus-outline:focus {
@@ -106,6 +105,7 @@ header a:visited {
     width: 2.1em;
     text-align: center;
 }
+
 
 /*----------------cards-----------------*/
 
@@ -178,11 +178,9 @@ header a:visited {
         display: block;
     }
 
-
     .card:hover .plus-minus {
         display: block;
     }
-
 }
 
 @media (hover: none) {
@@ -190,6 +188,7 @@ header a:visited {
         display: none;
     }
 }
+
 
 /*----------------productpage-----------------*/
 
@@ -203,9 +202,6 @@ header a:visited {
     margin-top: -5px;
     padding: 0.5rem, 0.75rem;
     border-radius: 0.25rem;
-    /* padding-right: 0.75rem;
-    padding-bottom: 0.375rem;
-    padding-left: 0.75rem; */
 }
 
 .productpage .add-btn:active {
@@ -214,16 +210,12 @@ header a:visited {
 }
 
 
-
-
-
 /*----------------shoppingcart-----------------*/
 
 .offcanvas {
     max-height: 100%;
     border-radius: 2% 0 2% 2%;
 }
-
 
 #cart-btn {
     position: fixed;
@@ -256,8 +248,6 @@ header a:visited {
     transform: scale(2,2);
 }
 
-
-
 #shoppingcart {
     position: relative;
 }
@@ -271,11 +261,9 @@ header a:visited {
 }
 
 .cart-prod-img {
-
     width: 55px;
     height: 55px;
     object-fit: cover;
-
 }
 
 .cart-prod-price {

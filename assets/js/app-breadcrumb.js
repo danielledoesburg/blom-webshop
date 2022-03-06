@@ -19,6 +19,7 @@ Vue.component('app_breadcrumb', {
             </div>
         </nav>
     `,
+    
     data() {
         return {      
         }
@@ -43,8 +44,6 @@ Vue.component('app_breadcrumb', {
 
         product () {
             return productData.find(prod => prod.id == this.$route.params.productid)
-        },
-
-    
+        },    
     }
 })

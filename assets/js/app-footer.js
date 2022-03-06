@@ -5,6 +5,7 @@ Vue.component('app_footer', {
             required: true
         }
     },
+    
     template: `   
     <div> 
         <div class="container py-2 px-5 my-3 justify-content-center">
@@ -54,8 +55,7 @@ Vue.component('app_footer', {
         </div>
     </div> 
     `,
-    methods: {
-    },
+
     computed: {
         currentYear() {
             return new Date().getFullYear()
